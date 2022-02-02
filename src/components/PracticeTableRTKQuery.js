@@ -1,28 +1,25 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getPracticesAsync } from '../features/practiceSlice';
+import React from 'react';
+import { practiceApi, useGetPracticesQuery } from '../app/services/practiceApi';
 
 const PracticeTableRTKQuery = () => {
-  const dispatch = useDispatch();
-  const practices = useSelector((state) => state.practice.practices);
-
-  useEffect(() => {
-    dispatch(getPracticesAsync());
-  }, [dispatch]);
+  const { data: practices, error, isLoading, refetch } = useGetPracticesQuery();
 
   return (
-    <table>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-      </tr>
-      {practices.map((practice) => (
-        <tr key={practice.id}>
-          <td>{practice.id}</td>
-          <td>{practice.name}</td>
+    <>
+      <table>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
         </tr>
-      ))}
-    </table>
+        {practices?.map((practice) => (
+          <tr key={practice.id}>
+            <td>{practice.id}</td>
+            <td>{practice.name}</td>
+          </tr>
+        ))}
+      </table>
+      <button onClick={refetch}>refetch</button>
+    </>
   );
 };
 
